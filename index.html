@@ -8,43 +8,134 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #f4f4f5; display: flex; justify-content: center;
-    align-items: center; min-height: 100vh;
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #1e3a5f 100%);
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; overflow: hidden;
   }
   .card {
-    background: #fff; border-radius: 12px; padding: 36px;
-    box-shadow: 0 2px 16px rgba(0,0,0,.08); max-width: 520px; width: 92%;
+    background: #fffbf5; border-radius: 16px; padding: 42px 40px;
+    box-shadow: 0 8px 40px rgba(0,0,0,.35); max-width: 540px; width: 92%;
+    border-top: 4px solid #f59e0b; position: relative;
   }
-  h1 { font-size: 1.5rem; margin-bottom: 6px; }
-  .subtitle { color: #555; margin-bottom: 24px; font-size: .95rem; }
-  .progress { font-size: .8rem; color: #999; margin-bottom: 14px; }
-  .question { font-size: 1.1rem; margin-bottom: 18px; line-height: 1.5; }
+  .card.anim-in {
+    animation: cardIn .45s cubic-bezier(.22,1,.36,1) both;
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(28px) scale(.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  h1 { font-size: 1.6rem; margin-bottom: 6px; color: #1e1b4b; }
+  .subtitle { color: #6b7280; margin-bottom: 24px; font-size: .95rem; }
+
+  .progress-row {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: .8rem; color: #9ca3af; margin-bottom: 6px;
+  }
+  .streak { color: #f59e0b; font-weight: 700; }
+  .progress-bar {
+    height: 5px; border-radius: 3px; background: #e5e7eb; margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%; background: linear-gradient(90deg, #6366f1, #a855f7);
+    border-radius: 3px; transition: width .4s ease;
+  }
+
+  .question {
+    font-size: 1.25rem; font-weight: 600; margin-bottom: 20px;
+    line-height: 1.5; color: #1e1b4b;
+  }
   .hint { font-size: .78rem; color: #aaa; margin-bottom: 14px; }
   .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+
   .opt {
-    padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 8px;
+    padding: 13px 18px; border: 2px solid #e0e0e0; border-radius: 10px;
     background: #fff; font-size: .95rem; cursor: pointer; text-align: left;
+    display: flex; align-items: center; gap: 12px;
+    opacity: 0; animation: optIn .35s ease both;
   }
-  .opt:hover, .opt:focus-visible { border-color: #999; outline: none; }
+  .opt:nth-child(1) { animation-delay: .08s; }
+  .opt:nth-child(2) { animation-delay: .16s; }
+  .opt:nth-child(3) { animation-delay: .24s; }
+  @keyframes optIn {
+    from { opacity: 0; transform: translateX(-14px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .opt-label {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 6px;
+    background: #eef2ff; color: #4f46e5; font-weight: 700; font-size: .85rem;
+    flex-shrink: 0;
+  }
+  .opt:hover, .opt:focus-visible { border-color: #818cf8; outline: none; }
   .opt.selected { border-color: #4f46e5; background: #eef2ff; font-weight: 600; }
-  .opt.correct { border-color: #16a34a; background: #dcfce7; }
-  .opt.wrong { border-color: #dc2626; background: #fee2e2; }
+  .opt.selected .opt-label { background: #4f46e5; color: #fff; }
+
+  .opt.correct {
+    border-color: #16a34a; background: #dcfce7;
+    animation: bounce .4s ease;
+  }
+  .opt.correct .opt-label { background: #16a34a; color: #fff; }
+  @keyframes bounce {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.045); }
+    70%  { transform: scale(.98); }
+    100% { transform: scale(1); }
+  }
+
+  .opt.wrong {
+    border-color: #dc2626; background: #fee2e2;
+    animation: shake .4s ease;
+  }
+  .opt.wrong .opt-label { background: #dc2626; color: #fff; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%      { transform: translateX(-6px); }
+    40%      { transform: translateX(6px); }
+    60%      { transform: translateX(-4px); }
+    80%      { transform: translateX(4px); }
+  }
+
   .feedback {
-    text-align: center; font-weight: 700; font-size: 1.05rem;
-    padding: 14px 0 4px; min-height: 40px;
+    text-align: center; font-weight: 700; font-size: 1.1rem;
+    padding: 14px 0 8px; min-height: 44px;
+    animation: feedFade .35s ease both;
+  }
+  @keyframes feedFade {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
   .feedback.is-correct { color: #16a34a; }
   .feedback.is-wrong { color: #dc2626; }
+
   .btn {
-    padding: 10px 24px; border: none; border-radius: 8px;
-    font-size: .9rem; font-weight: 600; cursor: pointer;
-    background: #4f46e5; color: #fff;
+    padding: 12px 28px; border: none; border-radius: 10px;
+    font-size: .95rem; font-weight: 600; cursor: pointer;
+    background: #4f46e5; color: #fff; transition: background .2s;
   }
+  .btn:hover { background: #4338ca; }
   .btn:focus-visible { outline: 3px solid #818cf8; outline-offset: 2px; }
   .btn:disabled { opacity: .35; cursor: default; }
   .center { text-align: center; }
-  .score { font-size: 2.8rem; font-weight: 700; color: #4f46e5; margin: 20px 0 8px; }
-  .verdict { color: #555; margin-bottom: 24px; font-size: 1rem; }
+
+  .score { font-size: 3.2rem; font-weight: 800; color: #4f46e5; margin: 20px 0 8px; }
+  .verdict { color: #6b7280; margin-bottom: 24px; font-size: 1.05rem; line-height: 1.5; }
+
+  /* Confetti */
+  .confetti-container {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 100; overflow: hidden;
+  }
+  .confetti-piece {
+    position: absolute; width: 10px; height: 10px; top: -20px;
+    animation: confettiFall 2.8s ease-in forwards;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(105vh) rotate(720deg); opacity: 0; }
+  }
 </style>
 </head>
 <body>
@@ -63,37 +154,50 @@ const questions = [
   { question: "What is someone who's 'Brahms and Liszt'?", options: ["Missed", "Kissed", "Drunk"], correctIndex: 2 },
 ];
 
-let current = 0;
-let lastResult = null;
+const correctLines = ["Lovely jubbly!", "Bob's yer uncle!", "Bang on, mate!", "Right as rain!", "Spot on, guv'nor!"];
+const wrongLines = ["Cor blimey, no!", "Not on yer nelly!", "Do me a favour!", "Leave it out!", "Blimey, that ain't it!"];
+const labels = ["A", "B", "C"];
+
+let current = 0, streak = 0, lastResult = null;
 const selected = Array(questions.length).fill(-1);
 const app = document.getElementById("app");
 
+function animCard() { app.classList.remove("anim-in"); void app.offsetWidth; app.classList.add("anim-in"); }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
 function showStart() {
-  lastResult = null;
+  lastResult = null; streak = 0;
   app.innerHTML = `
     <div class="center">
       <h1>Cockney Rhyming Slang Quiz</h1>
-      <p class="subtitle">Pick the meaning of each phrase</p>
+      <p class="subtitle">Pick the meaning of each phrase — 10 questions</p>
       <button class="btn" id="start">Start Quiz</button>
     </div>`;
+  animCard();
   document.getElementById("start").addEventListener("click", () => { current = 0; showQuestion(); });
 }
 
 function showQuestion() {
   const q = questions[current];
+  const pct = (current / questions.length) * 100;
+  const streakHTML = streak >= 2 ? `<span class="streak">${streak} in a row! 🔥</span>` : "";
   const feedbackHTML = lastResult !== null
-    ? `<div class="feedback ${lastResult ? "is-correct" : "is-wrong"}">${lastResult ? "Correct!" : "Wrong!"}</div>`
+    ? `<div class="feedback ${lastResult ? "is-correct" : "is-wrong"}">${lastResult ? pick(correctLines) : pick(wrongLines)}</div>`
     : "";
+
   app.innerHTML = `
     ${feedbackHTML}
-    <div class="progress">Question ${current + 1} of ${questions.length}</div>
-    <h1>Cockney Rhyming Slang Quiz</h1>
+    <div class="progress-row">
+      <span>Question ${current + 1} of ${questions.length}</span>
+      ${streakHTML}
+    </div>
+    <div class="progress-bar"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
     <div class="question">${q.question}</div>
-    <div class="hint">Click an answer, then click Next</div>
+    <div class="hint">Pick an answer, then hit Next</div>
     <div class="options" role="radiogroup">
       ${q.options.map((o, i) =>
         `<button class="opt${selected[current] === i ? " selected" : ""}" role="radio"
-          aria-checked="${selected[current] === i}" data-i="${i}">${o}</button>`
+          aria-checked="${selected[current] === i}" data-i="${i}"><span class="opt-label">${labels[i]}</span>${o}</button>`
       ).join("")}
     </div>
     <div class="center">
@@ -101,10 +205,12 @@ function showQuestion() {
         ${current === questions.length - 1 ? "See Results" : "Next"}
       </button>
     </div>`;
+
+  animCard();
   if (lastResult !== null) setTimeout(() => {
     const fb = app.querySelector(".feedback");
     if (fb) fb.style.display = "none";
-  }, 1200);
+  }, 1400);
   lastResult = null;
   app.querySelectorAll(".opt").forEach(btn =>
     btn.addEventListener("click", () => { selected[current] = +btn.dataset.i; showQuestion(); })
@@ -114,6 +220,8 @@ function showQuestion() {
 
 function handleNext() {
   const wasCorrect = selected[current] === questions[current].correctIndex;
+  if (wasCorrect) streak++; else streak = 0;
+
   app.querySelectorAll(".opt").forEach(btn => {
     const i = +btn.dataset.i;
     if (i === questions[current].correctIndex) btn.classList.add("correct");
@@ -125,20 +233,60 @@ function handleNext() {
     lastResult = wasCorrect;
     current++;
     current < questions.length ? showQuestion() : showResults();
-  }, 800);
+  }, 900);
+}
+
+function animateCounter(el, target) {
+  let n = 0;
+  const step = () => {
+    n++;
+    el.textContent = n + " / " + questions.length;
+    if (n < target) requestAnimationFrame(step);
+  };
+  if (target > 0) requestAnimationFrame(step);
+  else el.textContent = "0 / " + questions.length;
+}
+
+function spawnConfetti() {
+  const container = document.createElement("div");
+  container.className = "confetti-container";
+  document.body.appendChild(container);
+  const colors = ["#f59e0b", "#6366f1", "#ec4899", "#10b981", "#f43f5e", "#a855f7"];
+  for (let i = 0; i < 24; i++) {
+    const piece = document.createElement("div");
+    piece.className = "confetti-piece";
+    piece.style.left = Math.random() * 100 + "%";
+    piece.style.background = colors[i % colors.length];
+    piece.style.borderRadius = Math.random() > .5 ? "50%" : "2px";
+    piece.style.width = (6 + Math.random() * 8) + "px";
+    piece.style.height = (6 + Math.random() * 8) + "px";
+    piece.style.animationDelay = (Math.random() * 1.2) + "s";
+    piece.style.animationDuration = (2 + Math.random() * 1.5) + "s";
+    container.appendChild(piece);
+  }
+  setTimeout(() => container.remove(), 4500);
 }
 
 function showResults() {
   const score = selected.reduce((s, a, i) => s + (a === questions[i].correctIndex ? 1 : 0), 0);
-  const msg = score >= 9 ? "Proper Cockney!" : score >= 6 ? "Not bad, mate!" : "Back to the East End with ya!";
+  let emoji, msg;
+  if (score >= 9)      { emoji = "🎩"; msg = "Proper Cockney! You're the real deal, mate!"; }
+  else if (score >= 7) { emoji = "👏"; msg = "Blinding result! You know your stuff!"; }
+  else if (score >= 5) { emoji = "🤔"; msg = "Not bad, mate — room to grow though!"; }
+  else                 { emoji = "😬"; msg = "Back to the East End with ya!"; }
+
   app.innerHTML = `
     <div class="center">
       <h1>Cockney Rhyming Slang Quiz</h1>
-      <p class="subtitle">Pick the meaning of each phrase</p>
-      <div class="score">${score} / ${questions.length}</div>
+      <p class="subtitle">Here's how you did</p>
+      <div style="font-size:2.4rem; margin-top:12px;">${emoji}</div>
+      <div class="score" id="scoreNum">0 / ${questions.length}</div>
       <div class="verdict">${msg}</div>
-      <button class="btn" id="restart">Restart</button>
+      <button class="btn" id="restart">Play Again</button>
     </div>`;
+  animCard();
+  setTimeout(() => animateCounter(document.getElementById("scoreNum"), score), 350);
+  if (score >= 7) setTimeout(spawnConfetti, 300);
   document.getElementById("restart").addEventListener("click", () => { selected.fill(-1); showStart(); });
 }
 
