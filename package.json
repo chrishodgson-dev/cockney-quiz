@@ -1,0 +1,12 @@
+{
+  "name": "cockney-quiz",
+  "version": "1.0.0",
+  "description": "Cockney Rhyming Slang multiplayer quiz",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
